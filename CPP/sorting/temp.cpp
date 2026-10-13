@@ -1,62 +1,41 @@
 #include <iostream>
 using namespace std;
 
-void merge(int arr[], int left, int mid, int right){
-    int n1=mid-left+1;
-    int n2=right-mid;
+int partition(int arr[], int low, int high){
+    int i=low-1;
+    int pivot=arr[high];
 
-    int* L=new int[n1];
-    int* R=new int[n2];
-
-    for(int i=0; i<n1; i++){
-        L[i]=arr[left+1];
-    }
-    for(int j=0; j<n2; j++){
-        R[j]=arr[mid+1+j];
-    }
-
-    int i=0;
-    int j=0;
-    int k=left;
-
-    while(i<n1 && j<n2){
-        if(L[i]<=R[j]){
-            arr[k]=L[i];
+    for(int j=low; j<high; j++){
+        if(arr[j]<=pivot){
             i++;
-        }else{
-            arr[k]=R[j];
-            j++;
+            swap(arr[i], arr[j]);
         }
-        k++;
     }
 
-    
+    swap(arr[i+1], arr[high]);
 
-    delete[] L;
-    delete[] R;
+    return i+1;
 }
 
-void mergeSort(int arr[], int left, int right){
-    if(left>=right){
+void quicksort(int arr[], int low, int high){
+    if(low>=high){
         return;
     }
 
-    int mid=left+(right-left)/2;
+    int pivotindex = partition(arr, low, high);
 
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid+1, right);
-
-    merge(arr, left, mid, right);
+    quicksort(arr, low, pivotindex-1);
+    quicksort(arr, pivotindex+1, high);
 }
 
 int main(){
-    int arr[5]={5,2,55,99,1};
+    int arr[5]={5,2,3,4,1};
     int size=5;
+    int low=0, high=size-1;
 
-    mergeSort(arr, 0, size-1);
+    quicksort(arr, low, high);
 
     for(int i=0; i<size; i++){
         cout<<arr[i]<<" ";
     }
-    cout<<"\n";
 }
